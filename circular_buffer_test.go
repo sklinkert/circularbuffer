@@ -33,14 +33,14 @@ func TestMedian(t *testing.T) {
 	assert.EqualFloat64(t, 6, perf)
 }
 
-func TestPercentile(t *testing.T) {
+func TestQuantile(t *testing.T) {
 	v := getFilledBuffer(t)
 
-	perf, err := v.Percentile(0)
+	perf, err := v.Quantile(0)
 	assert.NoError(t.Fatalf, err)
 	assert.EqualFloat64(t, v.records[0], perf)
 
-	perf, err = v.Percentile(1)
+	perf, err = v.Quantile(1)
 	assert.NoError(t.Fatalf, err)
 	assert.EqualFloat64(t, v.records[len(v.records)-1], perf)
 }

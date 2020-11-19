@@ -5,7 +5,7 @@ Returns an error until `minSize` elements are reached. Overrides old values when
 
 - Dynamic size (min, max)
 - Median
-- Percentile
+- Quantile
 - Min/Max
 
 ### Example

@@ -52,32 +52,32 @@ func (cb *CircularBuffer) Insert(value float64) {
 
 // Min returns the smallest stored value in ring buffer
 func (cb *CircularBuffer) Min() (float64, error) {
-	return cb.Percentile(0)
+	return cb.Quantile(0)
 }
 
 // Max returns the highest stored value in ring buffer
 func (cb *CircularBuffer) Max() (float64, error) {
-	return cb.Percentile(1)
+	return cb.Quantile(1)
 }
 
 // Median returns the median of stored values in ring buffer
 func (cb *CircularBuffer) Median() (float64, error) {
-	return cb.Percentile(0.5)
+	return cb.Quantile(0.5)
 }
 
-// Percentile returns the element of the ring buffer for the given percentile
-func (cb *CircularBuffer) Percentile(percentile float64) (float64, error) {
+// Quantile returns the element of the ring buffer for the given quantile
+func (cb *CircularBuffer) Quantile(quantile float64) (float64, error) {
 	if !cb.enoughData {
 		return 0, fmt.Errorf("not enough data, have %d, need %d", cb.index, cb.minSize)
 	}
-	if percentile > 1 || percentile < 0 {
-		return 0, fmt.Errorf("percentile needs to be between 0 and 1, but is %f", percentile)
+	if quantile > 1 || quantile < 0 {
+		return 0, fmt.Errorf("quantile needs to be between 0 and 1, but is %f", quantile)
 	}
 
 	sortedPerf := cb.records
 	sort.Float64s(sortedPerf)
 
-	i := float64(len(cb.records)) * percentile
+	i := float64(len(cb.records)) * quantile
 	if i > 0 {
 		i--
 	}
