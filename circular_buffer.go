@@ -6,11 +6,12 @@ import (
 )
 
 type CircularBuffer struct {
-	records    []float64
-	minSize    int
-	maxSize    int
-	index      int
-	enoughData bool
+	records       []float64
+	sortedRecords []float64
+	minSize       int
+	maxSize       int
+	index         int
+	enoughData    bool
 }
 
 // New creates a new buffer and returns the reference.
@@ -18,18 +19,19 @@ type CircularBuffer struct {
 // maxSize defines the maximum number of elements in our buffer until we start overriding the oldest values.
 func New(minSize, maxSize int) *CircularBuffer {
 	return &CircularBuffer{
-		minSize: minSize,
-		maxSize: maxSize,
-		records: make([]float64, minSize),
+		minSize:       minSize,
+		maxSize:       maxSize,
+		records:       make([]float64, minSize),
+		sortedRecords: []float64{},
 	}
 }
 
 // GetAll returns all elements
-func (cb *CircularBuffer) GetAll() ([]float64, error){
+func (cb *CircularBuffer) GetAll() ([]float64, error) {
 	if !cb.enoughData {
 		return []float64{}, fmt.Errorf("not enough data, have %d, need %d", cb.index, cb.minSize)
 	}
-	return cb.records,nil
+	return cb.records, nil
 }
 
 // Insert new value to buffer
@@ -48,6 +50,12 @@ func (cb *CircularBuffer) Insert(value float64) {
 	} else {
 		cb.index++
 	}
+
+	// sort records
+	toBeSortedRecords := make([]float64, len(cb.records))
+	copy(toBeSortedRecords, cb.records)
+	sort.Float64s(toBeSortedRecords)
+	cb.sortedRecords = toBeSortedRecords
 }
 
 // Min returns the smallest stored value in ring buffer
@@ -74,15 +82,9 @@ func (cb *CircularBuffer) Quantile(quantile float64) (float64, error) {
 		return 0, fmt.Errorf("quantile needs to be between 0 and 1, but is %f", quantile)
 	}
 
-	sortedPerf := cb.records
-	sort.Float64s(sortedPerf)
-
-	i := float64(len(cb.records)) * quantile
+	i := float64(len(cb.sortedRecords)) * quantile
 	if i > 0 {
 		i--
 	}
-	return sortedPerf[int(i)], nil
+	return cb.sortedRecords[int(i)], nil
 }
-
-
-

@@ -38,11 +38,11 @@ func TestQuantile(t *testing.T) {
 
 	perf, err := v.Quantile(0)
 	assert.NoError(t.Fatalf, err)
-	assert.EqualFloat64(t, v.records[0], perf)
+	assert.EqualFloat64(t, v.sortedRecords[0], perf)
 
 	perf, err = v.Quantile(1)
 	assert.NoError(t.Fatalf, err)
-	assert.EqualFloat64(t, v.records[len(v.records)-1], perf)
+	assert.EqualFloat64(t, v.sortedRecords[len(v.sortedRecords)-1], perf)
 }
 
 func TestMin(t *testing.T) {
