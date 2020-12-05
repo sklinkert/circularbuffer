@@ -73,6 +73,19 @@ func (cb *CircularBuffer) Median() (float64, error) {
 	return cb.Quantile(0.5)
 }
 
+// Average returns the average of stored values in ring buffer
+func (cb *CircularBuffer) Average() (float64, error) {
+	if len(cb.sortedRecords) == 0 {
+		return 0, fmt.Errorf("not enough data")
+	}
+
+	var total float64
+	for _, record := range cb.sortedRecords {
+		total += record
+	}
+	return total / float64(len(cb.sortedRecords)), nil
+}
+
 // Quantile returns the element of the ring buffer for the given quantile
 func (cb *CircularBuffer) Quantile(quantile float64) (float64, error) {
 	if !cb.enoughData {

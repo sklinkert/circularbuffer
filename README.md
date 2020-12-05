@@ -4,6 +4,7 @@ Circular Buffer in Go/Golang with some math methods.
 Returns an error until `minSize` elements are reached. Overrides old values when `maxSize` is reached.
 
 - Dynamic size (min, max)
+- Average
 - Median
 - Quantile
 - Min/Max

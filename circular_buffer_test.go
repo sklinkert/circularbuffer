@@ -33,6 +33,14 @@ func TestMedian(t *testing.T) {
 	assert.EqualFloat64(t, 6, perf)
 }
 
+func TestAverage(t *testing.T) {
+	v := getFilledBuffer(t)
+
+	perf, err := v.Average()
+	assert.NoError(t.Fatalf, err)
+	assert.EqualFloat64(t, 6.5, perf)
+}
+
 func TestQuantile(t *testing.T) {
 	v := getFilledBuffer(t)
 
