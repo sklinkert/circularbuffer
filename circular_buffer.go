@@ -75,8 +75,8 @@ func (cb *CircularBuffer) Median() (float64, error) {
 
 // Average returns the average of stored values in ring buffer
 func (cb *CircularBuffer) Average() (float64, error) {
-	if len(cb.sortedRecords) == 0 {
-		return 0, fmt.Errorf("not enough data")
+	if !cb.enoughData {
+		return 0, fmt.Errorf("not enough data, have %d, need %d", cb.index, cb.minSize)
 	}
 
 	var total float64
